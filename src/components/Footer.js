@@ -1,8 +1,8 @@
 import React from 'react';
 import 'index.css';
 
-const Footer = () => {
-    return <footer className='main'>This is a footer !!!</footer>;
+const Footer = ({ length }) => {
+    return <footer className='main'>Number of Items: {length}</footer>;
 };
 
 export default Footer;
