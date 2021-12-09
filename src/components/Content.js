@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import 'index.css';
 
 const Content = () => {
@@ -27,7 +28,7 @@ const Content = () => {
                     <li className='item' key={item.id}>
                         <input type='checkbox' checked={item.checked}></input>
                         <label>{item.item}</label>
-                        <button>Delete</button>
+                        <DeleteIcon />
                     </li>
                 ))}
             </ul>
