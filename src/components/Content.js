@@ -2,7 +2,7 @@ import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import 'index.css';
 
-const Content = ({ items, onChange }) => {
+const Content = ({ items, onChange, onDelete }) => {
     return (
         <main className='main'>
             <ul>
@@ -15,7 +15,11 @@ const Content = ({ items, onChange }) => {
                         <label onDoubleClick={() => onChange(item.id)}>
                             {item.item}
                         </label>
-                        <DeleteIcon />
+                        <DeleteIcon
+                            role='button'
+                            tabIndex='0'
+                            onClick={() => onDelete(item.id)}
+                        />
                     </li>
                 ))}
             </ul>
