@@ -1,7 +1,8 @@
 import React from 'react';
+import 'index.css';
 
 const Content = () => {
-    return <div>This is a content !!!</div>;
+    return <main className='footer'>This is a content !!!</main>;
 };
 
 export default Content;
