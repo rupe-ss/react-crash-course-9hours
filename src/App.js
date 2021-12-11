@@ -6,46 +6,38 @@ import Footer from 'components/Footer';
 import AddItem from 'components/AddItem';
 
 function App() {
-    const [items, setItems] = useState([
-        {
-            id: 1,
-            checked: true,
-            item: 'One half pound bag of Cocoa Covered Almonds Unsalted',
-        },
-        {
-            id: 2,
-            checked: false,
-            item: 'Item 2',
-        },
-        {
-            id: 3,
-            checked: false,
-            item: 'Item 3',
-        },
-    ]);
+    const [items, setItems] = useState(
+        JSON.parse(localStorage.getItem('shoppinglist'))
+    );
 
     const [newItem, setNewItem] = useState('');
+
+    const setAndSaveItems = (newItems) => {
+        setItems(newItems);
+        localStorage.setItem('shoppinglist', JSON.stringify(newItems));
+    };
 
     const addItem = (item) => {
         //Our items has id, checked and items properties.
         // Items in array are objects that contains id, checked and items
+        //Don't get confused here, I took lots of time here to figure out.
         const id = items.length ? items[items.length - 1].id + 1 : 1; // This is creating id for the object
-        const myNewItem = { id, checked: false, item };
-        const listItems = [...items, myNewItem];
-        setItems(listItems);
+        const myNewItem = { id, checked: false, item }; //This is creating new objects
+        const listItems = [...items, myNewItem]; //Adding new object to array
+        setAndSaveItems(listItems); //Setting new item to list in local storage
     };
 
     const onCheckHandler = (id) => {
         const listItems = items.map((item) =>
             item.id === id ? { ...item, checked: !item.checked } : item
         );
-        setItems(listItems);
+        setAndSaveItems(listItems);
         //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
     const onDeleteHandler = (id) => {
         const listItems = items.filter((item) => item.id !== id);
-        setItems(listItems);
+        setAndSaveItems(listItems);
         //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
@@ -53,9 +45,8 @@ function App() {
         e.preventDefault();
         if (!newItem) return;
         addItem(newItem);
+        setNewItem('');
     };
-
-    console.log(items);
 
     return (
         <div className='App'>
