@@ -1,5 +1,5 @@
-const Header = () => {
-    return <header className='header'>Groceries List</header>;
+const Header = ({ title }) => {
+    return <header className='header'>{title}</header>;
 };
 
 export default Header;
