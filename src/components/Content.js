@@ -3,13 +3,13 @@ import React from 'react';
 import 'index.css';
 import ListItems from 'components/ListItems';
 
-const Content = ({ items, onChange, onDelete }) => {
+const Content = ({ items, onCheck, onDelete }) => {
     return (
         <main>
             {items.length ? (
                 <ListItems
                     items={items}
-                    onChange={onChange}
+                    onCheck={onCheck}
                     onDelete={onDelete}
                 />
             ) : (

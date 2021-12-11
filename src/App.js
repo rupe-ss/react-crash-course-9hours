@@ -67,7 +67,7 @@ function App() {
             />
             <Content
                 items={items}
-                onCheckHandler={onCheckHandler}
+                onCheck={onCheckHandler}
                 onDelete={onDeleteHandler}
             />
             <Footer length={items.length} />

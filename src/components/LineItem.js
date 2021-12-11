@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const LineItem = ({ item, onDelete, onCheck }) => {
     return (
-        <li className='item' key={item.id}>
+        <li className='item'>
             <input
                 type='checkbox'
                 checked={item.checked}

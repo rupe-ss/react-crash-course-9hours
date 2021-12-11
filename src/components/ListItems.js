@@ -5,7 +5,12 @@ const ListItems = ({ items, onCheck, onDelete }) => {
     return (
         <ul>
             {items.map((item) => (
-                <LineItem item={item} onCheck={onCheck} onDelete={onDelete} />
+                <LineItem
+                    item={item}
+                    onCheck={onCheck}
+                    onDelete={onDelete}
+                    key={item.id}
+                />
             ))}
         </ul>
     );
