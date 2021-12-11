@@ -7,6 +7,7 @@ import AddItem from 'components/AddItem';
 
 function App() {
     const [items, setItems] = useState(
+        //Even after server is stopped, list will stay there. This is great
         JSON.parse(localStorage.getItem('shoppinglist'))
     );
 
