@@ -4,6 +4,7 @@ import Header from 'components/Header';
 import Content from 'components/Content';
 import Footer from 'components/Footer';
 import AddItem from 'components/AddItem';
+import Search from 'components/Search';
 
 function App() {
     const [items, setItems] = useState(
@@ -12,6 +13,7 @@ function App() {
     );
 
     const [newItem, setNewItem] = useState('');
+    const [search, setSearch] = useState('');
 
     const setAndSaveItems = (newItems) => {
         setItems(newItems);
@@ -57,8 +59,11 @@ function App() {
                 setNewItem={setNewItem}
                 submitHandler={onSubmitHandler}
             />
+            <Search search={search} setSearch={setSearch} />
             <Content
-                items={items}
+                items={items.filter((item) =>
+                    item.item.toLowerCase().includes(search.toLocaleLowerCase())
+                )}
                 onCheck={onCheckHandler}
                 onDelete={onDeleteHandler}
             />
