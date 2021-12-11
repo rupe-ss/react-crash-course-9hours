@@ -1,28 +1,20 @@
 import React from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import 'index.css';
+import ListItems from 'components/ListItems';
 
 const Content = ({ items, onChange, onDelete }) => {
     return (
-        <main className='main'>
-            <ul>
-                {items.map((item) => (
-                    <li className='item' key={item.id}>
-                        <input
-                            type='checkbox'
-                            checked={item.checked}
-                            onChange={() => onChange(item.id)}></input>
-                        <label onDoubleClick={() => onChange(item.id)}>
-                            {item.item}
-                        </label>
-                        <DeleteIcon
-                            role='button'
-                            tabIndex='0'
-                            onClick={() => onDelete(item.id)}
-                        />
-                    </li>
-                ))}
-            </ul>
+        <main>
+            {items.length ? (
+                <ListItems
+                    items={items}
+                    onChange={onChange}
+                    onDelete={onDelete}
+                />
+            ) : (
+                <p style={{ marginTop: '2rem' }}> Your list is empty</p>
+            )}
         </main>
     );
 };
