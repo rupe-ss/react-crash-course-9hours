@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from 'components/Header';
 import Content from 'components/Content';
 import Footer from 'components/Footer';
@@ -7,17 +7,19 @@ import Search from 'components/Search';
 
 function App() {
     const [items, setItems] = useState(
-        //Even after server is stopped, list will stay there. This is great
-        JSON.parse(localStorage.getItem('shoppinglist'))
+        //Even after server is stopped, list will stay there. This is great.
+        // Using || or so that when items is empty its not null. It will throw error if items array is null.
+        JSON.parse(localStorage.getItem('shoppinglist') || [])
     );
 
     const [newItem, setNewItem] = useState('');
     const [search, setSearch] = useState('');
 
-    const setAndSaveItems = (newItems) => {
-        setItems(newItems);
-        localStorage.setItem('shoppinglist', JSON.stringify(newItems));
-    };
+    //We want to run a function everytime there is change in items array. We can do that by using useEffect
+    // useEffect takes function and array, two arguments
+    useEffect(() => {
+        localStorage.setItem('shoppinglist', JSON.stringify(items));
+    }, [items]);
 
     const addItem = (item) => {
         //Our items has id, checked and items properties.
@@ -26,20 +28,20 @@ function App() {
         const id = items.length ? items[items.length - 1].id + 1 : 1; // This is creating id for the object
         const myNewItem = { id, checked: false, item }; //This is creating new objects
         const listItems = [...items, myNewItem]; //Adding new object to array
-        setAndSaveItems(listItems); //Setting new item to list in local storage
+        setItems(listItems); //Setting new item to list in local storage
     };
 
     const onCheckHandler = (id) => {
         const listItems = items.map((item) =>
             item.id === id ? { ...item, checked: !item.checked } : item
         );
-        setAndSaveItems(listItems);
+        setItems(listItems);
         //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
     const onDeleteHandler = (id) => {
         const listItems = items.filter((item) => item.id !== id);
-        setAndSaveItems(listItems);
+        setItems(listItems);
         //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
