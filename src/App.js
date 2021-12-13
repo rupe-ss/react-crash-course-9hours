@@ -13,6 +13,8 @@ function App() {
     const [search, setSearch] = useState('');
     //State to catch a error message
     const [fetchError, setFetchError] = useState(null);
+    //State to store isLoading boolean value true
+    const [isLoading, setIsLoading] = useState(true);
 
     //Adding jsonServer url in a const
     const API_URL = 'http://localhost:5000/items';
@@ -22,6 +24,7 @@ function App() {
     useEffect(() => {
         //we can't do async above like useEffect( async() => {};
         //Since we can't async we will make a async function
+        //fetchItem is a function, it won't run itself, it has to be called from somewhere
         const fetchItems = async () => {
             // Adding try catch method as well
             try {
@@ -44,9 +47,12 @@ function App() {
             } catch (err) {
                 //Updating state with error message
                 setFetchError(err.message);
+            } finally {
+                setIsLoading(false);
             }
         };
         //using setTimeout( () => functionCall(), 2000) to delay the function call
+        //Calling fetchItems() function
         setTimeout(() => fetchItems(), 2000);
     }, []);
 
@@ -91,11 +97,12 @@ function App() {
             />
             <Search search={search} setSearch={setSearch} />
             <main>
+                {isLoading && <p>Loading Items ...</p>}
                 {fetchError && (
                     <p style={{ color: 'red' }}>{`Error: ${fetchError}`}</p>
                 )}
                 {/* Only show content if fetchError is null. */}
-                {!fetchError && (
+                {!fetchError && !isLoading && (
                     <Content
                         items={items.filter((item) =>
                             item.item
