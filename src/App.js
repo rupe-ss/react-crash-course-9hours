@@ -15,7 +15,7 @@ function App() {
     const [fetchError, setFetchError] = useState(null);
 
     //Adding jsonServer url in a const
-    const API_URL = 'http://localhost:5000/items';
+    const API_URL = 'http://localhost:5000/itemss';
 
     //We want to run a function everytime there is change in items array. We can do that by using useEffect
     // useEffect takes function and array, two arguments
@@ -93,7 +93,8 @@ function App() {
                 {fetchError && (
                     <p style={{ color: 'red' }}>{`Error: ${fetchError}`}</p>
                 )}
-                {
+                {/* Only show content if fetchError is null. */}
+                {!fetchError && (
                     <Content
                         items={items.filter((item) =>
                             item.item
@@ -103,7 +104,7 @@ function App() {
                         onCheck={onCheckHandler}
                         onDelete={onDeleteHandler}
                     />
-                }
+                )}
             </main>
             <Footer length={items.length} />
         </div>
