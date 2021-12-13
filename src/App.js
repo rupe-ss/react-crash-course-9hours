@@ -89,13 +89,22 @@ function App() {
                 submitHandler={onSubmitHandler}
             />
             <Search search={search} setSearch={setSearch} />
-            <Content
-                items={items.filter((item) =>
-                    item.item.toLowerCase().includes(search.toLocaleLowerCase())
+            <main>
+                {fetchError && (
+                    <p style={{ color: 'red' }}>{`Error: ${fetchError}`}</p>
                 )}
-                onCheck={onCheckHandler}
-                onDelete={onDeleteHandler}
-            />
+                {
+                    <Content
+                        items={items.filter((item) =>
+                            item.item
+                                .toLowerCase()
+                                .includes(search.toLocaleLowerCase())
+                        )}
+                        onCheck={onCheckHandler}
+                        onDelete={onDeleteHandler}
+                    />
+                }
+            </main>
             <Footer length={items.length} />
         </div>
     );
