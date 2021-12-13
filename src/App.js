@@ -15,7 +15,7 @@ function App() {
     const [fetchError, setFetchError] = useState(null);
 
     //Adding jsonServer url in a const
-    const API_URL = 'http://localhost:5000/itemss';
+    const API_URL = 'http://localhost:5000/items';
 
     //We want to run a function everytime there is change in items array. We can do that by using useEffect
     // useEffect takes function and array, two arguments
@@ -46,7 +46,8 @@ function App() {
                 setFetchError(err.message);
             }
         };
-        fetchItems();
+        //using setTimeout( () => functionCall(), 2000) to delay the function call
+        setTimeout(() => fetchItems(), 2000);
     }, []);
 
     const addItem = (item) => {
