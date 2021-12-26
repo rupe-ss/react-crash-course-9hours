@@ -4,8 +4,29 @@ import Content from 'components/Content';
 import Footer from 'components/Footer';
 import AddItem from 'components/AddItem';
 import Search from 'components/Search';
+import { colRef } from 'dbconfig';
+
+import { getDocs } from 'firebase/firestore';
 
 function App() {
+    useEffect(() => {
+        const fetchData = async () => {
+            let listItems = [];
+            try {
+                const snapshot = await getDocs(colRef);
+                if (!snapshot.docs) throw Error("Didn't recieve expected data");
+                snapshot.docs.forEach((doc) => {
+                    listItems.push({ ...doc.data(), id: doc.id });
+                });
+            } catch (err) {
+                // setFetchError(err.message);
+                console.log(err.message);
+            }
+            console.log(listItems);
+        };
+        fetchData();
+    }, []);
+
     //Removing localStorage function and making state empty array
     const [items, setItems] = useState([]);
 
@@ -31,7 +52,7 @@ function App() {
                 //fetch function will give a response, fetch is a await function
                 //we can do .then function since fetch is await function
                 const response = await fetch(API_URL);
-
+                console.log(response);
                 //checking if response is okay
                 //If error is thrown and setting error message as well
                 //If error is thrown it will go to catch
@@ -39,6 +60,7 @@ function App() {
                 // If response is okay then,
                 // Changing json response to JavaScript Object
                 const listItems = await response.json();
+                console.log(listItems);
                 //Updating local state
                 setItems(listItems);
                 //Once set is done updating error message as null;
