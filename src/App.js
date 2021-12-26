@@ -9,24 +9,6 @@ import { colRef } from 'dbconfig';
 import { getDocs } from 'firebase/firestore';
 
 function App() {
-    useEffect(() => {
-        const fetchData = async () => {
-            let listItems = [];
-            try {
-                const snapshot = await getDocs(colRef);
-                if (!snapshot.docs) throw Error("Didn't recieve expected data");
-                snapshot.docs.forEach((doc) => {
-                    listItems.push({ ...doc.data(), id: doc.id });
-                });
-            } catch (err) {
-                // setFetchError(err.message);
-                console.log(err.message);
-            }
-            console.log(listItems);
-        };
-        fetchData();
-    }, []);
-
     //Removing localStorage function and making state empty array
     const [items, setItems] = useState([]);
 
@@ -37,45 +19,26 @@ function App() {
     //State to store isLoading boolean value true
     const [isLoading, setIsLoading] = useState(true);
 
-    //Adding jsonServer url in a const
-    const API_URL = 'http://localhost:5000/items';
-
-    //We want to run a function everytime there is change in items array. We can do that by using useEffect
-    // useEffect takes function and array, two arguments
     useEffect(() => {
-        //we can't do async above like useEffect( async() => {};
-        //Since we can't async we will make a async function
-        //fetchItem is a function, it won't run itself, it has to be called from somewhere
-        const fetchItems = async () => {
-            // Adding try catch method as well
+        const fetchData = async () => {
+            let listItems = [];
             try {
-                //fetch function will give a response, fetch is a await function
-                //we can do .then function since fetch is await function
-                const response = await fetch(API_URL);
-                console.log(response);
-                //checking if response is okay
-                //If error is thrown and setting error message as well
-                //If error is thrown it will go to catch
-                if (!response.ok) throw Error("Didn't recieve expected data");
-                // If response is okay then,
-                // Changing json response to JavaScript Object
-                const listItems = await response.json();
-                console.log(listItems);
-                //Updating local state
+                const snapshot = await getDocs(colRef);
+                if (!snapshot.docs) throw Error("Didn't recieve expected data");
+                snapshot.docs.forEach((doc) => {
+                    listItems.push({ ...doc.data(), id: doc.id });
+                });
                 setItems(listItems);
-                //Once set is done updating error message as null;
                 setFetchError(null);
-                //Create a state to store a catch message
             } catch (err) {
-                //Updating state with error message
                 setFetchError(err.message);
+                console.log(err.message);
             } finally {
                 setIsLoading(false);
             }
+            console.log(listItems);
         };
-        //using setTimeout( () => functionCall(), 2000) to delay the function call
-        //Calling fetchItems() function
-        setTimeout(() => fetchItems(), 2000);
+        fetchData();
     }, []);
 
     const addItem = (item) => {
