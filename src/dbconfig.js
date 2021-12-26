@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection } from 'firebase/firestore';
+import { getFirestore, collection, deleteDoc, doc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDMDPAcqYy_9UYIOw9JkShghUoEkVReyYQ',
@@ -18,6 +18,16 @@ const db = getFirestore();
 
 // collection ref
 export const colRef = collection(db, 'groceries');
+
+export const deleteItem = async (id) => {
+    const docRef = doc(db, 'groceries', id);
+    try {
+        const response = await deleteDoc(docRef);
+        console.log(response);
+    } catch (err) {
+        console.log(err.message);
+    }
+};
 
 // get collection data
 // getDocs(colRef)

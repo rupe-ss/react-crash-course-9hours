@@ -7,6 +7,7 @@ import Search from 'components/Search';
 import { colRef } from 'dbconfig';
 
 import { getDocs, addDoc } from 'firebase/firestore';
+import { deleteItem } from 'dbconfig';
 
 function App() {
     const [items, setItems] = useState([]);
@@ -32,7 +33,6 @@ function App() {
             } finally {
                 setIsLoading(false);
             }
-            console.log(listItems);
         };
         fetchData();
     }, []);
@@ -51,13 +51,12 @@ function App() {
             item.id === id ? { ...item, checked: !item.checked } : item
         );
         setItems(listItems);
-        //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
     const onDeleteHandler = (id) => {
+        deleteItem(id);
         const listItems = items.filter((item) => item.id !== id);
         setItems(listItems);
-        //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
     };
 
     const onSubmitHandler = (e) => {
