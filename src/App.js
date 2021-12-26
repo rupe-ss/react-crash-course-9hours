@@ -6,20 +6,55 @@ import AddItem from 'components/AddItem';
 import Search from 'components/Search';
 
 function App() {
-    const [items, setItems] = useState(
-        //Even after server is stopped, list will stay there. This is great.
-        // Using || or so that when items is empty its not null. It will throw error if items array is null.
-        JSON.parse(localStorage.getItem('shoppinglist') || [])
-    );
+    //Removing localStorage function and making state empty array
+    const [items, setItems] = useState([]);
 
     const [newItem, setNewItem] = useState('');
     const [search, setSearch] = useState('');
+    //State to catch a error message
+    const [fetchError, setFetchError] = useState(null);
+    //State to store isLoading boolean value true
+    const [isLoading, setIsLoading] = useState(true);
+
+    //Adding jsonServer url in a const
+    const API_URL = 'http://localhost:5000/items';
 
     //We want to run a function everytime there is change in items array. We can do that by using useEffect
     // useEffect takes function and array, two arguments
     useEffect(() => {
-        localStorage.setItem('shoppinglist', JSON.stringify(items));
-    }, [items]);
+        //we can't do async above like useEffect( async() => {};
+        //Since we can't async we will make a async function
+        //fetchItem is a function, it won't run itself, it has to be called from somewhere
+        const fetchItems = async () => {
+            // Adding try catch method as well
+            try {
+                //fetch function will give a response, fetch is a await function
+                //we can do .then function since fetch is await function
+                const response = await fetch(API_URL);
+
+                //checking if response is okay
+                //If error is thrown and setting error message as well
+                //If error is thrown it will go to catch
+                if (!response.ok) throw Error("Didn't recieve expected data");
+                // If response is okay then,
+                // Changing json response to JavaScript Object
+                const listItems = await response.json();
+                //Updating local state
+                setItems(listItems);
+                //Once set is done updating error message as null;
+                setFetchError(null);
+                //Create a state to store a catch message
+            } catch (err) {
+                //Updating state with error message
+                setFetchError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        //using setTimeout( () => functionCall(), 2000) to delay the function call
+        //Calling fetchItems() function
+        setTimeout(() => fetchItems(), 2000);
+    }, []);
 
     const addItem = (item) => {
         //Our items has id, checked and items properties.
@@ -61,13 +96,24 @@ function App() {
                 submitHandler={onSubmitHandler}
             />
             <Search search={search} setSearch={setSearch} />
-            <Content
-                items={items.filter((item) =>
-                    item.item.toLowerCase().includes(search.toLocaleLowerCase())
+            <main>
+                {isLoading && <p>Loading Items ...</p>}
+                {fetchError && (
+                    <p style={{ color: 'red' }}>{`Error: ${fetchError}`}</p>
                 )}
-                onCheck={onCheckHandler}
-                onDelete={onDeleteHandler}
-            />
+                {/* Only show content if fetchError is null. */}
+                {!fetchError && !isLoading && (
+                    <Content
+                        items={items.filter((item) =>
+                            item.item
+                                .toLowerCase()
+                                .includes(search.toLocaleLowerCase())
+                        )}
+                        onCheck={onCheckHandler}
+                        onDelete={onDeleteHandler}
+                    />
+                )}
+            </main>
             <Footer length={items.length} />
         </div>
     );
