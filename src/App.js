@@ -6,17 +6,13 @@ import AddItem from 'components/AddItem';
 import Search from 'components/Search';
 import { colRef } from 'dbconfig';
 
-import { getDocs } from 'firebase/firestore';
+import { getDocs, addDoc } from 'firebase/firestore';
 
 function App() {
-    //Removing localStorage function and making state empty array
     const [items, setItems] = useState([]);
-
     const [newItem, setNewItem] = useState('');
     const [search, setSearch] = useState('');
-    //State to catch a error message
     const [fetchError, setFetchError] = useState(null);
-    //State to store isLoading boolean value true
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -41,13 +37,12 @@ function App() {
         fetchData();
     }, []);
 
-    const addItem = (item) => {
-        //Our items has id, checked and items properties.
-        // Items in array are objects that contains id, checked and items
-        //Don't get confused here, I took lots of time here to figure out.
-        const id = items.length ? items[items.length - 1].id + 1 : 1; // This is creating id for the object
-        const myNewItem = { id, checked: false, item }; //This is creating new objects
-        const listItems = [...items, myNewItem]; //Adding new object to array
+    const addItem = async (item) => {
+        const myNewItem = { checked: false, item }; //This is creating new objects
+        const response = await addDoc(colRef, myNewItem);
+        const myNewItemWithId = { ...myNewItem, id: response.id };
+        const listItems = [...items, myNewItemWithId]; //Adding new object to array
+        console.log(listItems);
         setItems(listItems); //Setting new item to list in local storage
     };
 
