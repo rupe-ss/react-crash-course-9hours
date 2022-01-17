@@ -6,7 +6,7 @@ import AddItem from 'components/AddItem';
 import Search from 'components/Search';
 import { colRefForGroceries } from 'dbconfig';
 
-import { getDocs, addDoc } from 'firebase/firestore';
+import { addDoc, onSnapshot } from 'firebase/firestore';
 import { deleteItem } from 'dbconfig';
 
 function App() {
@@ -17,33 +17,35 @@ function App() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            let listItems = [];
-            try {
-                const snapshot = await getDocs(colRefForGroceries);
+        try {
+            onSnapshot(colRefForGroceries, (snapshot) => {
                 if (!snapshot.docs) throw Error("Didn't recieve expected data");
-                snapshot.docs.forEach((doc) => {
-                    listItems.push({ ...doc.data(), id: doc.id });
+                const groceryLists = snapshot.docs.map((doc) => {
+                    return { id: doc.id, ...doc.data() };
                 });
-                setItems(listItems);
+                console.log(groceryLists);
+                setItems(groceryLists);
                 setFetchError(null);
-            } catch (err) {
-                setFetchError(err.message);
-                console.log(err.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
+            });
+        } catch (err) {
+            setFetchError(err.message);
+            console.log(err.message);
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
 
     const addItem = async (item) => {
-        const myNewItem = { checked: false, item }; //This is creating new objects
-        const response = await addDoc(colRefForGroceries, myNewItem);
-        const myNewItemWithId = { ...myNewItem, id: response.id };
-        const listItems = [...items, myNewItemWithId]; //Adding new object to array
-        console.log(listItems);
-        setItems(listItems); //Setting new item to list in local storage
+        try {
+            const myNewItem = { checked: false, item }; //This is creating new objects
+            const response = await addDoc(colRefForGroceries, myNewItem);
+            if (!response.id)
+                throw Error('Fail to add a item in Groceries List');
+            console.log(response);
+        } catch (error) {
+            setFetchError(error.message);
+            console.log(error.message);
+        }
     };
 
     const onCheckHandler = (id) => {
