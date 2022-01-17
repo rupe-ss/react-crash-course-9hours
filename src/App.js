@@ -9,9 +9,9 @@ import Search from 'components/Search';
 function App() {
     const [items, setItems] = useState(
         //Even after server is stopped, list will stay there. This is great
-        JSON.parse(localStorage.getItem('shoppinglist'))
+        JSON.parse(localStorage.getItem('shoppinglist')) || []
     );
-
+    // => JSON.parse(localStorage.getItem('shoppinglist')) || []. This is called short circuit evaluation
     const [newItem, setNewItem] = useState('');
     const [search, setSearch] = useState('');
 
