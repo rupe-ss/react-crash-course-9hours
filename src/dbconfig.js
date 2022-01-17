@@ -17,7 +17,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 
 // collection ref
-export const colRef = collection(db, 'groceries');
+export const colRefForGroceries = collection(db, 'groceries');
 
 export const deleteItem = async (id) => {
     const docRef = doc(db, 'groceries', id);
