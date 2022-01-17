@@ -4,7 +4,7 @@ import Content from 'components/Content';
 import Footer from 'components/Footer';
 import AddItem from 'components/AddItem';
 import Search from 'components/Search';
-import { colRef } from 'dbconfig';
+import { colRefForGroceries } from 'dbconfig';
 
 import { getDocs, addDoc } from 'firebase/firestore';
 import { deleteItem } from 'dbconfig';
@@ -20,7 +20,7 @@ function App() {
         const fetchData = async () => {
             let listItems = [];
             try {
-                const snapshot = await getDocs(colRef);
+                const snapshot = await getDocs(colRefForGroceries);
                 if (!snapshot.docs) throw Error("Didn't recieve expected data");
                 snapshot.docs.forEach((doc) => {
                     listItems.push({ ...doc.data(), id: doc.id });
@@ -39,7 +39,7 @@ function App() {
 
     const addItem = async (item) => {
         const myNewItem = { checked: false, item }; //This is creating new objects
-        const response = await addDoc(colRef, myNewItem);
+        const response = await addDoc(colRefForGroceries, myNewItem);
         const myNewItemWithId = { ...myNewItem, id: response.id };
         const listItems = [...items, myNewItemWithId]; //Adding new object to array
         console.log(listItems);
