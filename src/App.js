@@ -8,7 +8,7 @@ import Search from 'components/Search';
 import { colRefForGroceries } from 'dbconfig';
 
 import { addDoc, onSnapshot } from 'firebase/firestore';
-import { deleteItem, updateItem } from 'dbconfig';
+import { deleteItem, updateItem, queryOrder } from 'dbconfig';
 
 function App() {
     const [items, setItems] = useState([]);
@@ -19,7 +19,7 @@ function App() {
 
     useEffect(
         () =>
-            onSnapshot(colRefForGroceries, (snapshot) => {
+            onSnapshot(queryOrder, (snapshot) => {
                 try {
                     if (!snapshot.docs)
                         throw Error("Didn't recieve expected data");

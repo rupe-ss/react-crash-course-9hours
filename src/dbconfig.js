@@ -5,6 +5,8 @@ import {
     deleteDoc,
     doc,
     updateDoc,
+    query,
+    orderBy,
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -24,6 +26,8 @@ const db = getFirestore();
 
 // collection ref
 export const colRefForGroceries = collection(db, 'groceries');
+
+export const queryOrder = query(colRefForGroceries, orderBy('checked'));
 
 export const deleteItem = async (id) => {
     const docRef = doc(db, 'groceries', id);
