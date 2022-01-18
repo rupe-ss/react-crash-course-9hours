@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import Header from 'components/Header';
 import Content from 'components/Content';
@@ -7,7 +8,7 @@ import Search from 'components/Search';
 import { colRefForGroceries } from 'dbconfig';
 
 import { addDoc, onSnapshot } from 'firebase/firestore';
-import { deleteItem } from 'dbconfig';
+import { deleteItem, updateItem } from 'dbconfig';
 
 function App() {
     const [items, setItems] = useState([]);
@@ -52,16 +53,12 @@ function App() {
     };
 
     const onCheckHandler = (id) => {
-        const listItems = items.map((item) =>
-            item.id === id ? { ...item, checked: !item.checked } : item
-        );
-        setItems(listItems);
+        const item = _.find(items, { id: id });
+        updateItem(id, !item.checked);
     };
 
     const onDeleteHandler = (id) => {
         deleteItem(id);
-        const listItems = items.filter((item) => item.id !== id);
-        setItems(listItems);
     };
 
     const onSubmitHandler = (e) => {

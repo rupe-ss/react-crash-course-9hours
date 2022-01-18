@@ -1,5 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, deleteDoc, doc } from 'firebase/firestore';
+import {
+    getFirestore,
+    collection,
+    deleteDoc,
+    doc,
+    updateDoc,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDMDPAcqYy_9UYIOw9JkShghUoEkVReyYQ',
@@ -23,6 +29,18 @@ export const deleteItem = async (id) => {
     const docRef = doc(db, 'groceries', id);
     try {
         const response = await deleteDoc(docRef);
+        if (response) {
+            console.log(response);
+        }
+    } catch (err) {
+        console.log(err.message);
+    }
+};
+
+export const updateItem = async (id, checked) => {
+    const docRef = doc(db, 'groceries', id);
+    try {
+        const response = await updateDoc(docRef, { checked: checked });
         if (response) {
             console.log(response);
         }
