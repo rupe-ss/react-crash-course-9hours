@@ -6,7 +6,7 @@ import AddItem from 'components/AddItem';
 import Search from 'components/Search';
 import { colRefForGroceries } from 'dbconfig';
 
-import { addDoc, onSnapshot } from 'firebase/firestore';
+import { addDoc, onSnapshot, getDocs } from 'firebase/firestore';
 import { deleteItem } from 'dbconfig';
 
 function App() {
@@ -17,23 +17,25 @@ function App() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        try {
-            onSnapshot(colRefForGroceries, (snapshot) => {
+        const fetchData = async () => {
+            try {
+                let listItems = [];
+                const snapshot = await getDocs(colRefForGroceries);
                 if (!snapshot.docs) throw Error("Didn't recieve expected data");
-                const groceryLists = snapshot.docs.map((doc) => {
-                    return { id: doc.id, ...doc.data() };
+                snapshot.docs.forEach((doc) => {
+                    listItems.push({ ...doc.data(), id: doc.id });
                 });
-                console.log(groceryLists);
-                setItems(groceryLists);
+                setItems(listItems);
                 setFetchError(null);
-            });
-        } catch (err) {
-            setFetchError(err.message);
-            console.log(err.message);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+            } catch (err) {
+                setFetchError(err.message);
+                console.log(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [items]);
 
     const addItem = async (item) => {
         try {
