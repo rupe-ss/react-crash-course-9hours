@@ -27,3 +27,4 @@ jobs:
                   cache: 'yarn'
             - run: yarn install
             - run: yarn run build --if-present
+            - run: yarn cypress run --key ad6303c8-e12d-4335-9342-a95942df0463
